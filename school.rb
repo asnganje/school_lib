@@ -20,7 +20,6 @@ class Person
   end
 end
 
-
 class Student < Person
   attr_accessor :classroom
 
