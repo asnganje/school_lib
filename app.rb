@@ -38,14 +38,13 @@ class App
       print 'Has parent permission? [Y/N]'
       permission = gets.chomp.downcase == 'y'
       @people << { type: 'Student', name: name, age: age, id: id, parent_permission: permission }
-      print 'Student created successfully'
     when 2
       print 'Specialization'
       specialization = gets.chomp
       @people << { type: 'Teacher', name: name, age: age, id: id, specialization: specialization }
     else
       print 'Invalid option'
-      return
+      nil
     end
   end
 
