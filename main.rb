@@ -9,6 +9,7 @@ def main
     display_menu
     break if handle_option(gets.chomp.to_i, app, count)
   end
+  app.save_data
 end
 
 def display_menu
@@ -21,10 +22,7 @@ def handle_option(option, app, count)
   actions = { 1 => :list_all_books, 2 => :list_all_people, 3 => :create_a_person,
               4 => :create_a_book, 5 => :create_a_rental, 6 => :list_persons_rentals }
 
-  if option == 7
-    puts 'Exiting... Bye!'
-    return true
-  end
+  return exit_program if option == 7
 
   unless actions[option]
     count += 1
@@ -34,6 +32,12 @@ def handle_option(option, app, count)
 
   app.send(actions[option])
   false
+end
+
+def exit_program
+  puts 'Exiting program...'
+  puts 'Exiting... Bye!'
+  true
 end
 
 main

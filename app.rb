@@ -1,15 +1,22 @@
+require 'json'
+
 class App
+  DATA_FILES = {
+    books: 'books.json',
+    people: 'people.json',
+    rentals: 'rentals.json'
+  }.freeze
   def initialize
-    @books = []
-    @people = []
-    @rentals = []
+    @books = load_data(:books)
+    @people = load_data(:people)
+    @rentals = load_data(:rentals)
   end
 
   def list_all_books
     if @books.empty?
       puts 'No books available'
     else
-      @books.each_with_index do |index, book|
+      @books.each_with_index do |book, index|
         puts "#{index + 1}: #{book.title} by #{book.author}"
       end
     end
@@ -19,7 +26,7 @@ class App
     if @people.empty?
       puts 'No people found!'
     else
-      @people.each_with_index do |index, person|
+      @people.each_with_index do |person, index|
         puts "#{index + 1}: [#{person[:type]}] #{person[:name]}, Age: #{person[:age]}"
       end
     end
@@ -87,5 +94,24 @@ class App
     else
       rentals.each { |rental| puts "#{rental[:date]}: #{rental[:book][:title]} by #{rental[:book][:author]}" }
     end
+  end
+
+  def save_data
+    File.write(DATA_FILES[:books], JSON.pretty_generate(:books))
+    File.write(DATA_FILES[:people], JSON.pretty_generate(:people))
+    File.write(DATA_FILES[:rentals], JSON.pretty_generate(:rentals))
+    puts 'Data saved successfully!'
+  end
+
+  private
+
+  def load_data(type)
+    file_path = DATA_FILES[type]
+    return [] unless File.exist?(file_path)
+
+    JSON.parse(File.read(file_path), symbolize_names: true)
+  rescue JSON::ParseError
+    puts "Error loading #{file_path}, resetting data"
+    []
   end
 end
